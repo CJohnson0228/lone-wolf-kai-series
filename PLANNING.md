@@ -233,36 +233,60 @@ Example: Sixth Sense ability
 - Save/load at any point
 - Multiple save slots per character
 
-## Tech Stack Recommendations
+## Tech Stack - CONFIRMED ✅
 
 ### Frontend (Desktop/Web)
 
-- **Electron + React** or **Tauri + React/Vue**
-  - Cross-platform desktop app
-  - Web tech stack (easier development)
-  - Can build web version from same codebase
-- **Alternative: Progressive Web App (PWA)**
-  - Single codebase for web and mobile
-  - Can be "installed" on desktop
-  - Offline capability with service workers
+**Primary Choice: Tauri + React**
+- ✅ Tauri chosen over Electron (smaller bundle, better performance)
+- ✅ React for UI framework
+- ✅ Tailwind CSS for styling
+- ✅ shadcn/ui for component library
+- ✅ Framer Motion for animations
+- ✅ Cross-platform desktop (Windows, macOS, Linux)
+- ✅ Can build web version from same codebase
+- ✅ PWA support for mobile "install"
+
+**Why Tauri over Electron:**
+- Smaller binary size (~3-5MB vs ~120MB)
+- Lower memory usage (Rust-based)
+- Better performance
+- Learning opportunity
 
 ### Backend API
 
-- **Node.js + Express** or **Python + FastAPI**
+**Options:**
+- **Node.js + Express** (recommended for JS ecosystem consistency)
+- **Python + FastAPI** (alternative if prefer Python)
+
+**Features:**
 - RESTful API for auth, character management
-- GraphQL optional for complex queries
+- WebSocket for real-time features (optional)
+- JWT authentication
+- CORS for web version
 
 ### Database
 
-- **PostgreSQL** (as specified)
-- Cloudflare Tunnel for secure access
+**PostgreSQL** ✅
+- Via Cloudflare Tunnel for secure home server access
 - Connection pooling for performance
+- Stores: users, characters, progress, metadata
+- Does NOT store book content (that's bundled in app)
 
 ### Authentication
 
 - JWT tokens for sessions
-- bcrypt for password hashing
+- bcrypt (or Argon2) for password hashing
 - Refresh token rotation
+- Optional OAuth (Google, GitHub) later
+
+### Content Delivery
+
+**Hybrid Approach** ✅
+- **Book content**: Bundled as JSON files in app
+- **User data**: PostgreSQL database
+- **Images**: Bundled in app, optimized for web/desktop
+- **Updates**: Optional content patch download system
 
 ## UI/UX Considerations
 
@@ -329,47 +353,216 @@ Example: Sixth Sense ability
 - Cross-series character import (if applicable)
 - Advanced features
 
+## CONFIRMED DECISIONS ✅
+
+### Tech Stack
+- **Framework**: Tauri + React (learn Tauri, smaller bundle than Electron)
+- **UI Library**: Tailwind CSS + shadcn/ui + Framer Motion
+- **Backend**: Node.js + Express (or Python + FastAPI)
+- **Database**: PostgreSQL (via Cloudflare Tunnel)
+- **Content Storage**: Hybrid approach (bundled JSON + DB for user data)
+
+### App Structure
+- **Separate Apps per Series**: Kai, Magnakai, Grand Master as separate apps
+  - Reason: Portfolio/passion project, showcases creative UI work
+  - Easier to maintain and release incrementally
+  - Smaller downloads per app
+
+### Series Structure
+- **Kai Series**: Books 1-5
+- **Magnakai Series**: Books 6-10 (fresh start with new mechanics)
+- **Grand Master Series**: Books 11+
+
+### Character Progression
+- **Within Series**: Characters carry over between books
+  - All equipment, stats, gold carry over
+  - Gain +1 discipline per book completed (max 10 total)
+  - Endurance resets to max at start of new book
+- **Between Series**: Fresh start (Kai → Magnakai = new character)
+  - Different mechanics (Kai vs Magnakai disciplines)
+  - Justifies separate apps
+
+### Combat System
+- **Semi-Automated**:
+  - Player clicks "Attack" each round
+  - System generates random number (0-9)
+  - Calculates damage using Combat Results Table
+  - Visual combat log shows each round
+  - Combat continues until one reaches 0 Endurance
+
+### Character Creation
+- **Mirrors Book Experience**:
+  - Roll random (0-9) + 10 = Combat Skill (10-19)
+  - Roll random (0-9) + 20 = Endurance (20-29)
+  - Choose 5 Kai Disciplines from 10 available
+  - If Weaponskill chosen, roll for weapon type
+  - Roll for starting gold (0-9)
+  - Roll for one additional starting item (0-9)
+  - Start with: Axe, 1 Meal, Map of Sommerlund
+
+### Content Source
+- **Project Aon HTML Files**: ✅ AVAILABLE
+  - Need to build Python scraper to extract content
+  - Parse HTML into structured JSON format
+  - Extract text, choices, combat stats, conditionals
+  - Copy and optimize images
+
+### Platform Target
+- **Both Desktop and Web Simultaneously**:
+  - Tauri builds for desktop (Windows, macOS, Linux)
+  - Web version is mobile-friendly (responsive design)
+  - Single React codebase for both
+  - PWA capabilities for "install" on mobile
+
+### Offline/Online
+- **Offline-First**:
+  - Content bundled in app (JSON files)
+  - Works fully offline
+  - Optional sync to cloud (PostgreSQL) for cross-device play
+  - Auto-save locally + cloud sync
+
 ## Open Questions to Resolve
 
-1. **Book Range**: Confirm exact book numbers for each series
+1. ~~**Book Range**: Confirm exact book numbers for each series~~ ✅ RESOLVED
+   - Kai: Books 1-5
+   - Magnakai: Books 6-10
+   - Grand Master: Books 11+
 
-   - Kai: 1-4 or 1-5?
-   - Magnakai: 5-10 or 6-10?
+2. ~~**Character Transfer**: Can characters carry over between series?~~ ✅ RESOLVED
+   - Yes within series, No between series
 
-2. **Character Transfer**: Can characters carry over between series?
+3. ~~**Content Licensing**~~ ✅ RESOLVED
+   - Using Project Aon open content (legally approved)
 
-   - Equipment/items?
-   - Stats?
-   - Or fresh start per series?
+4. ~~**Offline Priority**~~ ✅ RESOLVED
+   - Offline-first with optional cloud sync
 
-3. **Content Licensing**:
-
-   - Have rights to digitize text?
-   - Need to use Project Aon open content?
-
-4. **Offline Priority**:
-
-   - Must work fully offline?
-   - Or online-first acceptable?
-
-5. **Multiplayer/Sharing**:
-
+5. **Multiplayer/Sharing**: ⏳ TO BE DECIDED
    - Share character builds?
    - Compare progress?
    - Leaderboards?
 
-6. **Platform Priority**:
-   - Desktop first?
-   - Web-first?
-   - Both simultaneously?
+6. ~~**Platform Priority**~~ ✅ RESOLVED
+   - Both desktop and web simultaneously
 
-## Next Steps
+## Next Steps - Development Roadmap
 
-1. **Confirm Series Structure**: Lock down exact book numbers
-2. **Content Source**: Verify licensing/use Project Aon content
-3. **Tech Stack Selection**: Choose frontend framework
-4. **Database Design**: Finalize schema based on storage decision
-5. **Prototype**: Build MVP for Book 1, Section 1-10 to test flow
+### Phase 0: Planning & Setup ✅ COMPLETED
+- [x] Confirm tech stack (Tauri + React)
+- [x] Confirm app structure (separate apps per series)
+- [x] Document character creation flow
+- [x] Document combat system
+- [x] Document UI/UX flows
+- [x] Plan content extraction strategy
+
+### Phase 1: Content Extraction (NEXT)
+1. **Build Python Scraper**
+   - Parse Project Aon HTML files
+   - Extract sections, choices, combat encounters
+   - Extract disciplines and equipment rules
+   - Export to JSON format
+   - Validate extracted content
+
+2. **Process Book 1 Content**
+   - Extract all 350 sections
+   - Verify links and choices
+   - Optimize and organize images
+   - Create content manifest
+
+3. **Test Content**
+   - Manual verification of key sections
+   - Test conditional logic extraction
+   - Validate combat encounters
+   - Check for missing or malformed data
+
+### Phase 2: MVP Development
+1. **Setup Tauri + React Project**
+   - Initialize Tauri app
+   - Setup React with TypeScript
+   - Configure Tailwind CSS
+   - Setup routing (React Router)
+
+2. **Implement Character Creation**
+   - Stats rolling screen
+   - Discipline selection
+   - Equipment generation
+   - Character summary
+
+3. **Implement Story Reader**
+   - Section display component
+   - Choice rendering
+   - Navigation between sections
+   - Image display
+
+4. **Implement Combat System**
+   - Combat engine logic
+   - Combat UI
+   - Combat results table
+   - Victory/defeat handling
+
+5. **Implement Save System**
+   - LocalStorage for MVP
+   - Save/load character
+   - Save progress
+   - Auto-save
+
+### Phase 3: Database Integration
+1. **Setup PostgreSQL**
+   - Database schema creation
+   - Cloudflare Tunnel setup
+   - Connection pooling
+
+2. **Build Backend API**
+   - User authentication
+   - Character CRUD operations
+   - Progress tracking
+   - Cloud save/load
+
+3. **Integrate Frontend**
+   - API client
+   - Authentication flow
+   - Cloud sync
+   - Offline support
+
+### Phase 4: Polish & Complete Book 1
+1. **UI Polish**
+   - Responsive design refinement
+   - Animations and transitions
+   - Dark mode
+   - Accessibility improvements
+
+2. **Testing**
+   - Playthrough Book 1 completely
+   - Bug fixes
+   - Balance testing
+   - Performance optimization
+
+3. **Additional Features**
+   - Inventory management UI
+   - Equipment screen
+   - Stats dashboard
+   - Settings screen
+
+### Phase 5: Books 2-5 (Kai Series Completion)
+1. **Extract Books 2-5 Content**
+2. **Implement Book Progression**
+   - Character carry-over
+   - Discipline unlocking
+   - Book completion flow
+
+3. **Series Completion**
+   - All 5 books playable
+   - Achievements/tracking
+   - Full series experience
+
+### Phase 6: Release & Iteration
+1. **Beta Testing**
+2. **Package for Distribution**
+   - Desktop builds (Windows, macOS, Linux)
+   - Web deployment
+3. **Release Kai Series App**
+4. **Gather Feedback**
+5. **Plan Magnakai Series App**
 
 ## Resources
 
