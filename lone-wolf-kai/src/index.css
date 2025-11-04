@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background-light dark:bg-background-dark;
+    @apply text-text-light dark:text-text-dark;
+    @apply font-sans;
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer components {
+  /* Button styles */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+    @apply hover:scale-105 active:scale-95;
+  }
+
+  .btn-primary {
+    @apply bg-kai-600 text-white hover:bg-kai-700;
+    @apply dark:bg-kai-500 dark:hover:bg-kai-600;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+    @apply dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6;
+    @apply border border-gray-200 dark:border-gray-700;
+  }
+
+  /* Input styles */
+  .input {
+    @apply w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600;
+    @apply bg-white dark:bg-gray-700;
+    @apply focus:outline-none focus:ring-2 focus:ring-kai-500;
+  }
+
+  /* Story text */
+  .story-text {
+    @apply text-lg leading-relaxed mb-4;
+    @apply font-serif;
+  }
+
+  /* Choice button */
+  .choice-btn {
+    @apply w-full text-left p-4 rounded-lg border-2 border-gray-300 dark:border-gray-600;
+    @apply hover:border-kai-500 hover:bg-kai-50 dark:hover:bg-kai-900/20;
+    @apply transition-all duration-200;
+    @apply cursor-pointer;
+  }
+
+  .choice-btn:hover {
+    @apply transform translate-x-2;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
